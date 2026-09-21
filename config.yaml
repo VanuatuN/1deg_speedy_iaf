@@ -1,0 +1,154 @@
+# ACCESS-OM2 1deg + SPEEDY IAF forcing on Leonardo
+
+scheduler: slurm
+walltime: 05:00:00
+jobname: 1deg_speedy_iaf
+
+mem: 200G
+account: ICT26_ESP
+partition: dcgp_usr_prod
+
+ncpus: 672
+nnodes: 6
+
+laboratory: /leonardo_scratch/fast/ICT26_ESP_0/ntilinin/access-om2
+experiment: 1deg_speedy_iaf
+
+
+modules:
+  use:
+    - /leonardo/home/userexternal/ntilinin/ACCESS-NRI/release/modules/linux-rhel8-x86_64
+
+  load:
+    - intel-oneapi-compilers/2021.2.0-p7vtyvv
+    - netcdf-c/4.7.4-d4klyvu
+    - netcdf-fortran/4.5.2-5ln2rw2
+    - openmpi/4.1.4-ga6avsd
+
+
+name: common
+model: access-om2
+
+
+# OASIS mappings actually used by namcouple:
+#
+# rsds/rlds/prra/prsn -> first-order conservative
+# psl/tas/huss/uas/vas -> patch
+#
+input:
+  - /leonardo/home/userexternal/ntilinin/COSIMA/access-om2/tools/rmp_speedy_cice_1st_conserve.nc
+  - /leonardo/home/userexternal/ntilinin/COSIMA/access-om2/tools/rmp_speedy_cice_patch.nc
+
+submodels:
+
+
+  - name: atmosphere
+    model: yatm
+
+    exe: /leonardo/home/userexternal/ntilinin/COSIMA/access-om2/bin/yatm_444ac5d.exe
+
+    input:
+
+      # JRA runoff / land-ice calving remapping
+      # friver and licalvf remain from JRA55-do
+      - /leonardo_scratch/fast/ICT26_ESP/ntilinin/INPUT/access-om2/remapping_weights/JRA55/global.1deg/2020.05.30/rmp_jrar_to_cict_CONSERV.nc
+
+      # SPEEDY atmospheric forcing:
+      # rsds, rlds, prra, prsn, psl, tas, huss, uas, vas
+      - /leonardo_scratch/fast/ICT26_ESP/ntilinin/SPEEDY_access/access_forcing/IAF
+
+      # JRA55-do auxiliary forcing:
+      # friver, licalvf only
+      - /leonardo_scratch/fast/ICT26_ESP/ntilinin/SPEEDY_access/access_forcing/JRA_aux
+
+    ncpus: 1
+    nnodes: 1
+    npernode: 1
+    partition: dcgp_usr_prod
+
+  - name: ocean
+    model: mom
+
+    exe: /leonardo/home/userexternal/ntilinin/COSIMA/access-om2/bin/fms_ACCESS-OM_88a2664-modified_libaccessom2_444ac5d.x
+
+    input:
+      - /leonardo_scratch/fast/ICT26_ESP/ntilinin/INPUT/access-om2/ocean/grids/mosaic/global.1deg/2020.05.30
+      - /leonardo_scratch/fast/ICT26_ESP/ntilinin/INPUT/access-om2/ocean/grids/bathymetry/global.1deg/2020.10.22
+      - /leonardo_scratch/fast/ICT26_ESP/ntilinin/INPUT/access-om2/ocean/grids/vertical/global.1deg/2020.10.22
+      - /leonardo_scratch/fast/ICT26_ESP/ntilinin/INPUT/access-om2/ocean/processor_masks/global.1deg/216.16x15/2020.05.30
+      - /leonardo_scratch/fast/ICT26_ESP/ntilinin/INPUT/access-om2/ocean/chlorophyll/global.1deg/2020.05.30
+      - /leonardo_scratch/fast/ICT26_ESP/ntilinin/INPUT/access-om2/ocean/initial_conditions/global.1deg/2020.10.22
+      - /leonardo_scratch/fast/ICT26_ESP/ntilinin/INPUT/access-om2/ocean/tides/global.1deg/2020.05.30
+      - /leonardo_scratch/fast/ICT26_ESP/ntilinin/INPUT/access-om2/ocean/surface_salt_restoring/global.1deg/2020.05.30
+
+    ncpus: 216
+    nnodes: 3
+    npernode: 72
+    partition: dcgp_usr_prod
+
+  - name: ice
+    model: cice5
+
+    exe: /leonardo/home/userexternal/ntilinin/COSIMA/access-om2/bin/cice_auscom_360x300_24p_edcfa6f-modified_libaccessom2_444ac5d.exe
+
+    input:
+      - /leonardo_scratch/fast/ICT26_ESP/ntilinin/INPUT/access-om2/ice/grids/global.1deg/2020.05.30
+      - /leonardo_scratch/fast/ICT26_ESP/ntilinin/INPUT/access-om2/ice/grids/global.1deg/2020.10.22
+      - /leonardo_scratch/fast/ICT26_ESP/ntilinin/INPUT/access-om2/ice/initial_conditions/global.1deg/2020.05.30
+
+    ncpus: 24
+    nnodes: 1
+    npernode: 24
+    partition: dcgp_usr_prod
+
+
+collate:
+  restart: true
+  walltime: 01:30:00
+  mem: 30G
+  ncpus: 4
+  nnodes: 1
+  npernode: 4
+  partition: dcgp_usr_prod
+  scheduler: slurm
+  exe: /leonardo/home/userexternal/ntilinin/COSIMA/access-om2/bin/mppnccombine
+
+
+sync:
+  enable: False
+  restarts: True
+  exclude_uncollated: False
+  mem: 2G
+  ncpus: 4
+  nnodes: 1
+  npernode: 4
+
+
+mpi:
+  runcmd: srun
+
+
+runlog: true
+stacksize: unlimited
+restart_freq: 1
+
+qsub_flags: umask 027
+
+
+env:
+  UCX_LOG_LEVEL: 'error'
+
+  LD_LIBRARY_PATH: /leonardo/home/userexternal/ntilinin/ACCESS-NRI/release/linux-rhel8-x86_64/intel-2021.2.0/netcdf-c-4.7.4-d4klyvujjjphnqh76j26kamyunbrkb34/lib:/leonardo/home/userexternal/ntilinin/ACCESS-NRI/release/linux-rhel8-x86_64/intel-2021.2.0/netcdf-fortran-4.5.2-5ln2rw27vpecnfidohaao4crc4x5wfo7/lib:/leonardo/home/userexternal/ntilinin/ACCESS-NRI/release/linux-rhel8-x86_64/intel-2021.2.0/openmpi-4.1.4-ga6avsdxmjya35twagfjts7jp3yahbwt/lib:$LD_LIBRARY_PATH
+
+  OMPI_MCA_btl_tcp_if_include: ib0
+  MCA_IO: ompio
+  MCA_IO_OMPIO_NUM_AGGREGATORS: 1
+
+
+platform:
+  nodesize: 112
+
+
+userscripts:
+  error: resub.sh
+  run: rm -f resubmit.count

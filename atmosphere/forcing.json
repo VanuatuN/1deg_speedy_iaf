@@ -1,0 +1,63 @@
+{
+  "description": "SPEEDY IAF forcing for ACCESS-OM2",
+
+  "inputs": [
+    {
+      "filename": "INPUT/rsds_SPEEDY_{{year}}.nc",
+      "fieldname": "rsds",
+      "cname": "swfld_ai"
+    },
+    {
+      "filename": "INPUT/rlds_SPEEDY_{{year}}.nc",
+      "fieldname": "rlds",
+      "cname": "lwfld_ai"
+    },
+    {
+      "filename": "INPUT/prra_SPEEDY_{{year}}.nc",
+      "fieldname": "prra",
+      "cname": "rain_ai"
+    },
+    {
+      "filename": "INPUT/prsn_SPEEDY_{{year}}.nc",
+      "fieldname": "prsn",
+      "cname": "snow_ai"
+    },
+    {
+      "filename": "INPUT/psl_SPEEDY_{{year}}.nc",
+      "fieldname": "psl",
+      "cname": "press_ai"
+    },
+    {
+      "filename": "INPUT/friver_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-5-0_gr_{{year}}0101-{{year}}1231.nc",
+      "fieldname": "friver",
+      "cname": "runof_ai",
+      "domain": "land"
+    },
+    {
+      "filename": "INPUT/tas_SPEEDY_{{year}}.nc",
+      "fieldname": "tas",
+      "cname": "tair_ai"
+    },
+    {
+      "filename": "INPUT/huss_SPEEDY_{{year}}.nc",
+      "fieldname": "huss",
+      "cname": "qair_ai"
+    },
+    {
+      "filename": "INPUT/uas_SPEEDY_{{year}}.nc",
+      "fieldname": "uas",
+      "cname": "uwnd_ai"
+    },
+    {
+      "filename": "INPUT/vas_SPEEDY_{{year}}.nc",
+      "fieldname": "vas",
+      "cname": "vwnd_ai"
+    },
+    {
+      "filename": "INPUT/licalvf_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-5-0_gr_{{year}}0101-{{year}}1231.nc",
+      "fieldname": "licalvf",
+      "cname": "licalvf_ai",
+      "domain": "land"
+    }
+  ]
+}

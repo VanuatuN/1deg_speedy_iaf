@@ -1,0 +1,18 @@
+format: yamanifest
+version: 1.0
+---
+work/atmosphere/yatm_444ac5d.exe:
+  fullpath: /leonardo/home/userexternal/ntilinin/COSIMA/access-om2/bin/yatm_444ac5d.exe
+  hashes:
+    binhash: 919b6e18891668d0dc83022b83e2ebf1
+    md5: b8bdfaab2c9bc9c1e38dda95ffacc10f
+work/ice/cice_auscom_360x300_24p_edcfa6f-modified_libaccessom2_444ac5d.exe:
+  fullpath: /leonardo/home/userexternal/ntilinin/COSIMA/access-om2/bin/cice_auscom_360x300_24p_edcfa6f-modified_libaccessom2_444ac5d.exe
+  hashes:
+    binhash: c8bc3308ff6198fc326075d559ec8794
+    md5: 115ef4445a51b41b85eec54f94b7a2e0
+work/ocean/fms_ACCESS-OM_88a2664-modified_libaccessom2_444ac5d.x:
+  fullpath: /leonardo/home/userexternal/ntilinin/COSIMA/access-om2/bin/fms_ACCESS-OM_88a2664-modified_libaccessom2_444ac5d.x
+  hashes:
+    binhash: 4f21663d88c5a636bc67af765c043a8c
+    md5: 39cee4f8b1f7ea578e78aa615904c7b8
