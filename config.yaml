@@ -1,7 +1,7 @@
 # ACCESS-OM2 1deg + SPEEDY IAF forcing on Leonardo
 
 scheduler: slurm
-walltime: 05:00:00
+walltime: 04:00:00
 jobname: 1deg_speedy_iaf
 
 mem: 200G
